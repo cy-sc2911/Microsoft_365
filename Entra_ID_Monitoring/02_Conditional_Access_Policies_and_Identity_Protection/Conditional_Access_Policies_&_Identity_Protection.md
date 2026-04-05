@@ -62,3 +62,31 @@ Use the following query to start a hunt for suspicious CAP results:
 ## Identity Protection
 Conditional Access enforces your rules, while **Identity Protection** is what tells Conditional Access when something looks suspicious in the first place.
 Identity Protection is Entra ID's built in ML-based risk detection engine. It continuously analyses sign-in behaviour and user account signals, assigns risk scores, and feeds those scores into Conditional Access so risk-based policies can act on them.
+
+There are two types of risk: Sign-in Risk and User Risk.
+Both types of risk use a three-tier scale: Low, Medium, High.
+
+
+### Sign-in Risk
+It evaluates the suspiciousness of a specific sign-in attempt.
+This is evaluated in real time, per authentication event. Below are examples of what raises sign-in risk:
+
+- **Suspicious Source IP**: Sign-in from a known risky or anonymous IP. (e.g., Tor, known proxy services, or VPM providers)
+- **Impossible Travel**: Two sign-ins from geographically distant locations within an impossible timeframe. (e.g., First login from London and after 5 minutes, a login from New York)
+- **Umfamiliar Sign-in Properties**: New device, new location, or new ASN that doesn't match the user's historical pattern.
+
+### User Risk
+It evaluates the likelihood that a specific account will be compromised.
+This accumulates over time, based on the account's history. Examples:
+- **Leaked credentials**: Validates if the account's password appeared in a known breach dump.
+- **Multiple high-risk sign-ins**: Check related risky sign-ins that weren't remediated.
+- **Suspicious M365 activity**: Check potential post-compromise M365 activity. (e.g., Suspicious inbox-rules)
+
+## Identity Protection in Sign-in Logs
+We can look for Identity Protection log details in three different **sourcetype** values:
+
+- Sign-in logs(**azure::aad:signin**)
+
+To access the risk level of a specific sign-in attempt, we can use the **riskLevelDuringSignIn** field. For the cumulative risk associated with the user account as a whole, refer to **riskLevelAggregated**.
+
+
