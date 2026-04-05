@@ -132,3 +132,6 @@ Below is a Splunk query to filter all risky user logs:
     index="task-3" sourcetype="azure:aad:identity_protection:risky_user"
     | table _time, userPrincipalName, riskLevel, riskState, riskDetail
     | sort - _time
+
+## Tasks completed
+![Completed](images/tasks.png)
