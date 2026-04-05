@@ -89,4 +89,46 @@ We can look for Identity Protection log details in three different **sourcetype*
 
 To access the risk level of a specific sign-in attempt, we can use the **riskLevelDuringSignIn** field. For the cumulative risk associated with the user account as a whole, refer to **riskLevelAggregated**.
 
+Below is a Splunk query that uses these fields to analyse risky sign-ins.
 
+### List high-risk sign-ins
+
+    index="task-3" sourcetype="azure:aad:signin"
+    | where riskLevelDuringSignIn="high"
+    | table _time, userPrincipalName, appDisplayName, ipAddress, location.countryOrRegion, riskLevelDuringSignIn, riskLevelAggregated
+    | sort - _time
+
+### Risk Detection Logs (azure:aad:riskdetection)
+
+This log type is a detailed log generated when risks are detected. The difference between the regular sign-in log fields is the additional details related to the detection, for example:
+- **riskEventType**: The type of the risk identified (e.g., anonymizedIPAddress, impossibleTravel).
+- **riskLevel**: Shows how risky the detection is.
+
+These logs also generate detections in other usage steps of M365 and Entra ID. We can check the type of activity that is being alerted by looking at the **activity** field.
+
+    It's important to mention that we should not blindly trust the risk detections. For example, if no impossible travel alerts were generated, it doesn't mean that it didn't happen.
+    Always validate sign-in logs when we suspect user behavior or when performing proactive threat hunting.
+
+Below are two Splunk queries to analyse risk detection logs:
+### List all risk detection logs
+
+    index="task-3" sourcetype="azure:aad:identity_protection:riskdetection"
+
+### List all risk detections related to anonymized IPs
+
+    index="task-3" sourcetype="azure:aad:identity_protection:riskdetection"
+    | where riskEventType="anonymizedIPAddress"
+    | table _time, userPrincipalName, activity, ipAddress, location.countryOrRegion, riskLevel, riskEventType
+    | sort - _time
+
+### Risky User Logs (azure:aad:identity_protection:risky_user)
+Every user has a risk level in Entra ID. This is calculated based on risk detection, and it's a way for Microsoft to alert admins to users who are likely compromised (or almost compromised) and require their attention.
+
+Once a user changes its risk state, a risky user log is generated. This makes this log type a good trigger to perform proactive threat hunting to identify users who are likely compromised.
+
+Below is a Splunk query to filter all risky user logs:
+### List all risky user alerts
+
+    index="task-3" sourcetype="azure:aad:identity_protection:risky_user"
+    | table _time, userPrincipalName, riskLevel, riskState, riskDetail
+    | sort - _time
