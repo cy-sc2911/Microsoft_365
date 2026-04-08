@@ -178,3 +178,5 @@ index="scenario" sourcetype="o365:management:activity" UserId="<USER-EMAIL>"
 - [TryHackMe Room](https://tryhackme.com/room/m365monitoringbasics)
 - [Related Room — Entra ID Monitoring](https://tryhackme.com/room/entraidmonitoring)
 
+## Room Completed
+![Room](images/finished.png)

@@ -29,3 +29,5 @@ This room covers monitoring and threat detection within **Microsoft Entra ID** (
 - [MITRE ATT&CK — Initial Access via Valid Accounts](https://attack.mitre.org/techniques/T1078/)
 - [TryHackMe Room](https://tryhackme.com/room/entraidmonitoring)
 
+## Room Completed
+![Room](images/finished.png)
